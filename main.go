@@ -8,12 +8,18 @@ import (
 )
 
 func main() {
-	fmt.Println(`
+	fmt.Print(`
 This program will consume 1GB of ram memory for 30secs and then exit. Its usefull to test container memory-limits
-Usage to consume 2GB ram: ./thisprogram -size 2147483648
+Usage:
+   #to consume 1GB ram for 30s
+   ./thisprogram 
+
+   #to consume 2GB ram for 60s
+   ./thisprogram -size 2147483648 -secs 60
 `)
-	var memorySize int
+	var memorySize, secs int
 	flag.IntVar(&memorySize, "size", 1*1000*1024*1024, "Memory size in bytes")
+	flag.IntVar(&secs, "secs", 30, "Duration in seconds before exiting")
 	flag.Parse()
 
 	data := make([]byte, memorySize)
@@ -21,5 +27,6 @@ Usage to consume 2GB ram: ./thisprogram -size 2147483648
 	rand.Read(data) // Fill the data slice with random bytes
 
 	fmt.Println("Allocated and filled", len(data), "bytes of memory with random data")
-	time.Sleep(30 * time.Second) // Keep the program running for 30 seconds
+	fmt.Printf("Sleeping %d seconds\n", secs)
+	time.Sleep(time.Duration(secs) * time.Second) // Keep the program running for secs seconds
 }
